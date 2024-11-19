@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from users.models import User
 
 NULLABLE = {"null": True, "blank": True}
 
@@ -16,6 +18,12 @@ class Client(models.Model):
         verbose_name="комментарий",
         max_length=100,
         **NULLABLE,
+    )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     class Meta:
@@ -35,6 +43,12 @@ class Message(models.Model):
     body = models.TextField(
         verbose_name="тело письма",
         max_length=100
+    )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+        null=True,
     )
 
     class Meta:
@@ -59,6 +73,7 @@ class Mailing(models.Model):
     )
 
     date_time = models.DateTimeField(
+        default=timezone.now,
         verbose_name="Дата и время первой отправки рассылки",
         help_text="Выберите время отправки",
         **NULLABLE,
@@ -89,11 +104,23 @@ class Mailing(models.Model):
         help_text="Выберите сообщение",
         related_name='messages'
     )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Пользователь",
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "Рассылка"
         verbose_name_plural = "Рассылки"
         ordering = ["date_time", "status"]
+        permissions = [
+            ('can_view_mailing', 'Can view mailing'),
+            ('can_block_user', 'Can block user'),
+            ('can_disable_mailing', 'Can disable mailing'),
+        ]
 
     def __str__(self):
         return self.status
