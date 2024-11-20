@@ -151,4 +151,6 @@ class Attempt(models.Model):
         ordering = ["date_time", "status"]
 
     def __str__(self):
-        return self.status
+        # Возвращаем строку, описывающую статус
+        return "Успех" if self.status else "Неудача"
+

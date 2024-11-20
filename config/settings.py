@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import os
+import sys
+import logging
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -150,27 +152,18 @@ LOGGING = {
             'format': '{levelname} {asctime} {module} {message}',
             'style': '{',
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(Path(__file__).resolve().parent, 'mailing.log'),
+            'stream': sys.stdout,  # Используйте стандартный вывод
             'formatter': 'verbose',
         },
     },
     'loggers': {
-        'mailer': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': True,
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
         },
     },
 }
