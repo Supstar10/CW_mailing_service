@@ -8,6 +8,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True, verbose_name='Email')
     USERNAME_FIELD = "email"
+    token = models.CharField(max_length=32, **NULLABLE)
     REQUIRED_FIELDS = []
 
     groups = models.ManyToManyField(

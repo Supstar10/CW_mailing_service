@@ -21,6 +21,7 @@ class UserCreateView(CreateView):
     model = User
     form_class = UserRegisterForm
     success_url = reverse_lazy('users:login')
+    template_name = "users/castomuser_form.html"
 
     def form_valid(self, form):
         user = form.save()
@@ -29,7 +30,7 @@ class UserCreateView(CreateView):
         user.token = token
         user.save()
         host = self.request.get_host()
-        url = f"http://{host}/users/email-confirm/{token}/"
+        url = f"http://{host}/users/email_verification/{token}/"
         send_mail(
             subject="Подтверждение почты",
             message=f"Привет, перейди по ссылке для подтверждения почты {url}",
@@ -66,5 +67,7 @@ class UserLogoutView(View):
 def email_verification(request, token):
     user = get_object_or_404(User, token=token)
     user.is_active = True
+    user.token = None  # Удаляем токен после подтверждения
     user.save()
     return redirect(reverse("users:login"))
+

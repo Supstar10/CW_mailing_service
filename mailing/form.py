@@ -11,7 +11,7 @@ class StyleFormMixin:
 
 class MailingForm(StyleFormMixin, forms.ModelForm):
     clients = forms.ModelMultipleChoiceField(
-        queryset=Client.objects.none(),
+        queryset=Client.objects.all(),  # Получаем всех клиентов
         widget=forms.CheckboxSelectMultiple
     )
 
@@ -19,14 +19,10 @@ class MailingForm(StyleFormMixin, forms.ModelForm):
         model = Mailing
         exclude = ['user', 'is_active']
 
-    def __init__(self, *args, **kwargs):
-        # Получаем пользователя из kwargs, если он там есть
-        user = kwargs.pop('user', None)
+    def __init__(self, *args, user=None, **kwargs):  # Добавляем user как аргумент
         super().__init__(*args, **kwargs)
-
-        # Устанавливаем queryset для поля clients
-        if user is not None:
-            self.fields['clients'].queryset = Client.objects.filter(owner=user)
+        # Теперь вы можете использовать user, если это необходимо
+        # Например, если вы хотите делать что-то с user, вы можете добавить логику здесь
 
     def clean_day(self):
         cleaned_data = self.cleaned_data['day']
