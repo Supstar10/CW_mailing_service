@@ -17,7 +17,7 @@ def send_due_mailings():
 
     mailings = Mailing.objects.filter(
         date_time__lte=current_datetime,
-        status__in=['created', 'started']
+        status__in=['created', 'running']
     )
 
     for mailing in mailings:
@@ -33,7 +33,7 @@ def send_due_mailings():
             Attempt.objects.create(
                 mailing=mailing,
                 date_time=current_datetime,
-                status='successful',
+                status=True,
                 server_response='Письмо отправлено успешно'
             )
 
@@ -50,7 +50,7 @@ def send_due_mailings():
             Attempt.objects.create(
                 mailing=mailing,
                 date_time=current_datetime,
-                status='failed',
+                status=False,
                 server_response=str(e)
             )
 
@@ -63,7 +63,7 @@ def send_due_mailings():
             Attempt.objects.create(
                 mailing=mailing,
                 date_time=current_datetime,
-                status='failed',
+                status=False,
                 server_response=str(e)
             )
 

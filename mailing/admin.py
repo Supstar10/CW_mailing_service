@@ -4,21 +4,21 @@ from mailing.models import Mailing, Message, Client, Attempt
 
 @admin.register(Mailing)
 class MailingAdmin(admin.ModelAdmin):
-    list_display = ("id", "status", "frequency",)
+    list_display = ("id", "status", "frequency", "date_time",)
     list_filter = ("status",)
     search_fields = ("status",)
 
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ("id", "topic", )
+    list_display = ("id", "topic", "owner",)
     list_filter = ("id",)
     search_fields = ("topic",)
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ("id", "email", "full_name",)
+    list_display = ("id", "email", "full_name", "owner",)
     list_filter = ("email", "full_name")
     search_fields = ("email",)
 
@@ -28,3 +28,4 @@ class AttemptAdmin(admin.ModelAdmin):
     list_display = ("id", "date_time", "status", "mailing")
     list_filter = ("date_time", "status", "mailing")
     search_fields = ("status",)
+
