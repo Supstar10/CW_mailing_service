@@ -26,10 +26,7 @@ class Blog(models.Model):
         verbose_name="Дата публикации",
         auto_now_add=True,
     )
-    is_published = models.BooleanField(
-        default=True,
-        verbose_name="Опубликовано"
-    )
+    is_published = models.BooleanField(default=True, verbose_name="Опубликовано")
 
     class Meta:
         verbose_name = "Статья"

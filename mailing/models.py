@@ -1,19 +1,14 @@
 from django.db import models
 from django.utils import timezone
+
 from users.models import User
 
 NULLABLE = {"null": True, "blank": True}
 
 
 class Client(models.Model):
-    email = models.EmailField(
-        verbose_name="электронная почта",
-        unique=True
-    )
-    full_name = models.CharField(
-        verbose_name="ФИО",
-        max_length=100
-    )
+    email = models.EmailField(verbose_name="электронная почта", unique=True)
+    full_name = models.CharField(verbose_name="ФИО", max_length=100)
     comment = models.TextField(
         verbose_name="комментарий",
         max_length=100,
@@ -23,7 +18,7 @@ class Client(models.Model):
         User,
         verbose_name="Пользователь",
         on_delete=models.CASCADE,
-        null=True,
+        **NULLABLE,
     )
 
     class Meta:
@@ -36,14 +31,8 @@ class Client(models.Model):
 
 
 class Message(models.Model):
-    topic = models.CharField(
-        verbose_name="тема письма",
-        max_length=30
-    )
-    body = models.TextField(
-        verbose_name="тело письма",
-        max_length=100
-    )
+    topic = models.CharField(verbose_name="тема письма", max_length=30)
+    body = models.TextField(verbose_name="тело письма", max_length=100)
     owner = models.ForeignKey(
         User,
         verbose_name="Пользователь",
@@ -54,7 +43,9 @@ class Message(models.Model):
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
-        ordering = ["topic", ]
+        ordering = [
+            "topic",
+        ]
 
     def __str__(self):
         return self.topic
@@ -64,12 +55,12 @@ class Mailing(models.Model):
     CHOICES_TIME = (
         ("Day", "Раз в день"),
         ("Week", "Раз в неделю"),
-        ("Month", "Раз в месяц")
+        ("Month", "Раз в месяц"),
     )
     CHOICES_STATUS = (
-        ('created', 'создана'),
-        ('running', 'запущена'),
-        ('completed', 'завершена'),
+        ("created", "создана"),
+        ("running", "запущена"),
+        ("completed", "завершена"),
     )
 
     date_time = models.DateTimeField(
@@ -89,20 +80,20 @@ class Mailing(models.Model):
         verbose_name="Статус рассылки",
         max_length=20,
         choices=CHOICES_STATUS,
-        default='created',
+        default="created",
     )
     clients = models.ManyToManyField(
         Client,
         verbose_name="Клиенты",
         help_text="выберите клиентов для рассылки",
-        related_name="clients"
+        related_name="clients",
     )
     message = models.ForeignKey(
         Message,
         on_delete=models.CASCADE,
         verbose_name="Сообщение",
         help_text="Выберите сообщение",
-        related_name='messages'
+        related_name="messages",
     )
     owner = models.ForeignKey(
         User,
@@ -117,9 +108,9 @@ class Mailing(models.Model):
         verbose_name_plural = "Рассылки"
         ordering = ["date_time", "status"]
         permissions = [
-            ('can_view_mailing', 'Can view mailing'),
-            ('can_block_user', 'Can block user'),
-            ('can_disable_mailing', 'Can disable mailing'),
+            ("can_view_mailing", "Can view mailing"),
+            ("can_block_user", "Can block user"),
+            ("can_disable_mailing", "Can disable mailing"),
         ]
 
     def __str__(self):
@@ -128,8 +119,7 @@ class Mailing(models.Model):
 
 class Attempt(models.Model):
     date_time = models.DateTimeField(
-        verbose_name="дата и время последней попытки",
-        auto_now=True
+        verbose_name="дата и время последней попытки", auto_now=True
     )
     status = models.BooleanField(
         verbose_name="статус попытки",
@@ -142,7 +132,7 @@ class Attempt(models.Model):
         Mailing,
         verbose_name="рассылка",
         on_delete=models.CASCADE,
-        related_name='Mailings'
+        related_name="Mailings",
     )
 
     class Meta:
@@ -153,4 +143,3 @@ class Attempt(models.Model):
     def __str__(self):
         # Возвращаем строку, описывающую статус
         return "Успех" if self.status else "Неудача"
-

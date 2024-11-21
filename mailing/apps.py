@@ -7,6 +7,8 @@ class MailingConfig(AppConfig):
 
     def ready(self):
         import time
+
         from .apscheduler import start
+
         time.sleep(2)
         start()

@@ -1,5 +1,5 @@
-import secrets
 import random
+import secrets
 import string
 
 from django.contrib.auth import login, logout
@@ -7,20 +7,20 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.views import LoginView
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView
 
 from config import settings
-from users.forms import UserRegisterForm, AuthForm
-from users.models import User
 from config.settings import EMAIL_HOST_USER
+from users.forms import AuthForm, UserRegisterForm
+from users.models import User
 
 
 class UserCreateView(CreateView):
     model = User
     form_class = UserRegisterForm
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy("users:login")
     template_name = "users/castomuser_form.html"
 
     def form_valid(self, form):
@@ -70,4 +70,3 @@ def email_verification(request, token):
     user.token = None  # Удаляем токен после подтверждения
     user.save()
     return redirect(reverse("users:login"))
-
