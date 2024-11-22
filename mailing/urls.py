@@ -6,7 +6,7 @@ from mailing.views import (ClientCreateView, ClientDeleteView,
                            ClientDetailView, ClientListView, ClientUpdateView,
                            MailingCreateView, MailingDeleteView,
                            MailingDetailView, MailingListView,
-                           MailingUpdateView, index)
+                           MailingUpdateView,)
 
 from . import views
 
